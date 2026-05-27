@@ -138,6 +138,12 @@ public class PomodoroTimerService
         }
     }
 
+    public void SwitchToMode(PomodoroMode mode)
+    {
+        if (_isRunning) return;
+        SwitchMode(mode);
+    }
+
     private void SwitchMode(PomodoroMode mode)
     {
         CurrentMode = mode;

@@ -23,6 +23,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     public ICommand SkipCommand { get; }
     public ICommand ApplySettingsCommand { get; }
 
+    public CalendarViewModel CalendarViewModel { get; }
+
     [ObservableProperty]
     private string _timeDisplay = "25:00";
 
@@ -61,6 +63,27 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private System.Windows.Media.SolidColorBrush _modeColor = new(System.Windows.Media.Color.FromRgb(51, 51, 51));
+
+    [ObservableProperty]
+    private string[] _availableModes = ["专注", "短休息", "长休息"];
+
+    [ObservableProperty]
+    private string _selectedMode = "专注";
+
+    partial void OnSelectedModeChanged(string value)
+    {
+        if (_timerService == null) return;
+
+        var mode = value switch
+        {
+            "专注" => PomodoroMode.Focus,
+            "短休息" => PomodoroMode.ShortBreak,
+            "长休息" => PomodoroMode.LongBreak,
+            _ => PomodoroMode.Focus
+        };
+
+        _timerService.SwitchToMode(mode);
+    }
 
     // Settings properties
     [ObservableProperty]
@@ -124,6 +147,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
         SkipCommand = new RelayCommand(Skip, () => IsSkipEnabled);
         ApplySettingsCommand = new RelayCommand(ApplySettings);
 
+        // Initialize calendar view model
+        CalendarViewModel = new CalendarViewModel(_dataService, _appData);
+
         LoadDataAsync();
     }
 
@@ -145,6 +171,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _timerService.UpdateSettings(settings);
         UpdateTimeDisplay();
         RefreshStatistics();
+        
+        // Update calendar view model with loaded data
+        CalendarViewModel.UpdateAppData(_appData);
     }
 
     public void Initialize(Window mainWindow)
@@ -294,6 +323,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             PomodoroMode.LongBreak => "长休息",
             _ => "专注"
         };
+
+        SelectedMode = ModeDisplay;
 
         ModeColor = mode switch
         {

@@ -51,6 +51,15 @@ public partial class MainWindow : Window
     private void TimerTab_Click(object sender, RoutedEventArgs e)
     {
         TimerView.Visibility = Visibility.Visible;
+        CalendarView.Visibility = Visibility.Collapsed;
+        StatsView.Visibility = Visibility.Collapsed;
+        SettingsView.Visibility = Visibility.Collapsed;
+    }
+
+    private void CalendarTab_Click(object sender, RoutedEventArgs e)
+    {
+        TimerView.Visibility = Visibility.Collapsed;
+        CalendarView.Visibility = Visibility.Visible;
         StatsView.Visibility = Visibility.Collapsed;
         SettingsView.Visibility = Visibility.Collapsed;
     }
@@ -58,6 +67,7 @@ public partial class MainWindow : Window
     private void StatsTab_Click(object sender, RoutedEventArgs e)
     {
         TimerView.Visibility = Visibility.Collapsed;
+        CalendarView.Visibility = Visibility.Collapsed;
         StatsView.Visibility = Visibility.Visible;
         SettingsView.Visibility = Visibility.Collapsed;
     }
@@ -65,6 +75,7 @@ public partial class MainWindow : Window
     private void SettingsTab_Click(object sender, RoutedEventArgs e)
     {
         TimerView.Visibility = Visibility.Collapsed;
+        CalendarView.Visibility = Visibility.Collapsed;
         StatsView.Visibility = Visibility.Collapsed;
         SettingsView.Visibility = Visibility.Visible;
     }

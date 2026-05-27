@@ -85,4 +85,33 @@ public class DataPersistenceService
             .OrderBy(s => s.Date)
             .ToList();
     }
+
+    public DailyNote GetDailyNote(List<DailyNote> notes, DateOnly date)
+    {
+        return notes.FirstOrDefault(n => n.Date == date) ?? new DailyNote { Date = date };
+    }
+
+    public void SaveDailyNote(AppData appData, DailyNote note)
+    {
+        var existing = appData.DailyNotes.FirstOrDefault(n => n.Date == note.Date);
+        if (existing != null)
+        {
+            existing.Content = note.Content;
+            existing.Todos = note.Todos;
+            existing.LastModified = DateTime.Now;
+        }
+        else
+        {
+            note.LastModified = DateTime.Now;
+            appData.DailyNotes.Add(note);
+        }
+    }
+
+    public List<DailyNote> GetNotesForMonth(List<DailyNote> notes, int year, int month)
+    {
+        return notes
+            .Where(n => n.Date.Year == year && n.Date.Month == month)
+            .OrderBy(n => n.Date)
+            .ToList();
+    }
 }
